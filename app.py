@@ -234,40 +234,44 @@ def home_page():
     return render_template('index.html')
 
 # Create a route for your API
-@app.route('/scrape_product', methods=['POST','GET'])
+@app.route('/scrape_product', methods=['POST', 'GET'])
 @cross_origin()
 def scrape_product():
-    if request.method == 'POST':
-        Product_URL = request.form['Product URL']
-        Detail = scrape_product_details(Product_URL=Product_URL)
-        results = analyze_flipkart_reviews(Detail['Link'])
-        
-        # Product Details 
-        Product_Details_List = {
-             "Product URL" : Product_URL,
-             "Product Name" : Detail['Product Name'],
-             "Product Image" : Detail['Product Image'],
-             "Original Price" : Detail['Original Price'],
-             "Discount %" : Detail['Discount %'],
-             "Special Price" : Detail['Special Price'],
-             "Overall Rating" : Detail['Rating'],
-             "Total Ratings" : Detail['Total Number of Ratings'],
-             "Total Reviews" : Detail['Total Number of Reviews'],
-             "Expected Delivery Date" : Detail['Delivery Date'],
-             "Seller Name" : Detail['Seller Name'],
-             "Seller Rating" : Detail['Seller Rating'],
-             "Positive Reviews %" : results['Positive Reviews %'],
-             "Negative Reviews %" : results['Negative Reviews %'],
-             "Neutral Reviews %" : results['Neutral Reviews %']
+    try:
+        if request.method == 'POST':
+            Product_URL = request.form['Product URL']
+            Detail = scrape_product_details(Product_URL=Product_URL)
+            results = analyze_flipkart_reviews(Detail['Link'])
+            
+            # Product Details 
+            Product_Details_List = {
+                "Product URL": Product_URL,
+                "Product Name": Detail['Product Name'],
+                "Product Image": Detail['Product Image'],
+                "Original Price": Detail['Original Price'],
+                "Discount %": Detail['Discount %'],
+                "Special Price": Detail['Special Price'],
+                "Overall Rating": Detail['Rating'],
+                "Total Ratings": Detail['Total Number of Ratings'],
+                "Total Reviews": Detail['Total Number of Reviews'],
+                "Expected Delivery Date": Detail['Delivery Date'],
+                "Seller Name": Detail['Seller Name'],
+                "Seller Rating": Detail['Seller Rating'],
+                "Positive Reviews %": results['Positive Reviews %'],
+                "Negative Reviews %": results['Negative Reviews %'],
+                "Neutral Reviews %": results['Neutral Reviews %']
             }
+            
+            # Save product details to MySQL
+            save_to_mysql(Product_Details_List)
+            
+            # Render the report.html with product details
+            return render_template('report.html', product=Product_Details_List)
         
-        # Save product details to MySQL
-        save_to_mysql(Product_Details_List)
-        
-        # Render the report.html with product details
-        return render_template('report.html', product=Product_Details_List)
+        return render_template('index.html')
     
-    return render_template('index.html')
+    except Exception as e:
+        return f"An error occurred: {e}", 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
