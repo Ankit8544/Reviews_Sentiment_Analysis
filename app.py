@@ -28,30 +28,26 @@ nltk.download('stopwords')
 
 # Function to Scrap Product Detail
 def scrape_product_details(Product_URL):
-    # Configure Chrome options
     options = Options()
-    options.add_argument("--headless")  # Run Chrome in headless mode
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--headless")  # Run the browser in headless mode
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920,1080")  # Set window size for proper rendering
-    # Setup Chrome driver
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    try:
-        # Load the Product URL
-        driver.get(Product_URL)
-        # Explicit wait to ensure the page loads completely
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
-        # Scroll down to load more Details (adjust the number of scrolls as needed)
-        scrolls = 3
-        for _ in range(scrolls):
-            driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
-            time.sleep(1)  # Wait for the page to load more content
-        # Get the page source after scrolling
-        Product_Page = driver.page_source
-    finally:
-        # Close the browser
-        driver.quit()
+    # Set up ChromeDriver with webdriver-manager
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+    # Load the Product URL
+    driver.get(Product_URL)
+    time.sleep(3)  # Let the page load
+    # Scroll down to load more Details (adjust the number of scrolls as needed)
+    scrolls = 3
+    for _ in range(scrolls):
+        driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
+        time.sleep(2)
+    # Get the page source after scrolling
+    Product_Page = driver.page_source
+    # Close the browser
+    driver.quit()
     # Now you can use BeautifulSoup to parse the loaded content
     HTML = bs(Product_Page, 'html.parser')
         
