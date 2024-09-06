@@ -1,0 +1,24 @@
+# Python
+*.pyc
+__pycache__/
+
+# Environment variables
+.env
+
+# Virtual environments
+venv/
+ENV/
+
+# Logs
+*.log
+
+# IDE specific
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker related
+*.env
