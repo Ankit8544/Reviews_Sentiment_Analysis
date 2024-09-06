@@ -1,10 +1,8 @@
-### README.md
-
 # Flipkart Product Scraper and Review Sentiment Analyzer
 
 This is a Flask-based web application that scrapes product details and customer reviews from Flipkart and performs sentiment analysis on the reviews. The application saves the product information and sentiment percentages to a MySQL database. The sentiment analysis is performed using both NLTK's `SentimentIntensityAnalyzer` and Huggingface's `distilbert-base-uncased-finetuned-sst-2-english` model.
 
-The live version of this project is available [here](https://reviews-sentiment-analysis.onrender.com).
+The live version of this project is available [here](https://reviews-sentiment-analysis.onrender.com/).
 
 ## Features
 
@@ -21,7 +19,7 @@ The live version of this project is available [here](https://reviews-sentiment-a
 - **Database**: MySQL
 - **Web Scraping**: Selenium, BeautifulSoup
 - **NLP**: NLTK, Huggingface Transformers
-- **Deployment**: Render.com (Live [here](https://reviews-sentiment-analysis.onrender.com))
+- **Deployment**: Render.com (Live [here](https://reviews-sentiment-analysis.onrender.com/))
 
 ## Setup Instructions
 
