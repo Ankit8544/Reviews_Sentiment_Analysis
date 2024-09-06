@@ -33,7 +33,6 @@ def scrape_product_details(Product_URL):
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--disable-gpu")
-    options.binary_location = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
     
     # Set up ChromeDriver with webdriver-manager
     service = Service(ChromeDriverManager().install())
@@ -150,7 +149,6 @@ def scrape_reviews(link):
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument("--disable-gpu")
-        options.binary_location = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
         
         # Set up ChromeDriver with webdriver-manager
         service = Service(ChromeDriverManager().install())
