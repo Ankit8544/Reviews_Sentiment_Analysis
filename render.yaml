@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: review-sentiment-analysis
+    name: review-sentiment-analysis  # Service name should be unique
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
@@ -9,17 +9,17 @@ services:
     envVars:
       - key: MYSQL_HOST
         fromDatabase:
-          name: your-database-name
+          name: your-database-name  # Replace with your actual database service name
           property: host
       - key: MYSQL_USER
         fromDatabase:
-          name: your-database-name
+          name: your-database-name  # Replace with your actual database service name
           property: user
       - key: MYSQL_PASSWORD
         fromDatabase:
-          name: your-database-name
+          name: your-database-name  # Replace with your actual database service name
           property: password
       - key: MYSQL_DB
         fromDatabase:
-          name: your-database-name
+          name: your-database-name  # Replace with your actual database service name
           property: database
