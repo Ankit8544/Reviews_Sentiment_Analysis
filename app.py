@@ -33,6 +33,8 @@ def scrape_product_details(Product_URL):
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--disable-gpu")
+    options.binary_location = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+    
     # Set up ChromeDriver with webdriver-manager
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
@@ -143,10 +145,16 @@ def scrape_reviews(link):
     Comment = []
 
     for page_url in Reviews_Page_URL:
-        options = webdriver.ChromeOptions()
+        options = Options()
         options.add_argument("--headless")  # Run the browser in headless mode
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
         options.add_argument("--disable-gpu")
-        driver = webdriver.Chrome(options=options)
+        options.binary_location = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+        
+        # Set up ChromeDriver with webdriver-manager
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get(page_url)
         time.sleep(2)  # Let the page load
         scrolls = 3
