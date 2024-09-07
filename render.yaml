@@ -3,7 +3,7 @@ services:
     name: review-sentiment-analysis  # Service name should be unique
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    buildCommand: buildCommand: ./setup.sh && pip install -r requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 600
     autoDeploy: true
     envVars:

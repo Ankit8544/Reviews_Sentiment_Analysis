@@ -26,17 +26,19 @@ import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
 
+def get_chrome_driver():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(options=chrome_options)
+    return driver
+
 # Function to Scrap Product Detail
 def scrape_product_details(Product_URL):
-    options = Options()
-    options.add_argument("--headless")  # Run the browser in headless mode
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument("--disable-gpu")
-    
-    # Set up ChromeDriver with webdriver-manager
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = get_chrome_driver()
     # Load the Product URL
     driver.get(Product_URL)
     time.sleep(3)  # Let the page load
@@ -144,15 +146,7 @@ def scrape_reviews(link):
     Comment = []
 
     for page_url in Reviews_Page_URL:
-        options = Options()
-        options.add_argument("--headless")  # Run the browser in headless mode
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument("--disable-gpu")
-        
-        # Set up ChromeDriver with webdriver-manager
-        service = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = get_chrome_driver()
         driver.get(page_url)
         time.sleep(2)  # Let the page load
         scrolls = 3
