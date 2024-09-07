@@ -28,14 +28,15 @@ WORKDIR /app
 # Upgrade pip
 RUN pip install --upgrade pip
 
+# Install Python dependencies and suppress the warning about root user
+RUN pip install -r requirements.txt --root-user-action=ignore
+
 # Copy the application code
 COPY . /app
-
-# Install Python dependencies
-RUN pip install -r requirements.txt
 
 # Expose port 5000
 EXPOSE 5000
 
 # Start the app with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", "--timeout", "600", "app:app"]
+
