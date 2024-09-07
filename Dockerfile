@@ -1,40 +1,38 @@
-FROM python:3.9-slim
+# Use an official Python runtime as a parent image
+FROM python:3.12-slim
 
-# Install system dependencies and Chrome
-RUN apt-get update && \
-    apt-get install -y wget gnupg && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
-    apt-get update && \
-    apt-get install -y google-chrome-stable && \
-    apt-get clean && \
+# Install system dependencies for Chrome and utilities
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    xvfb \
+    google-chrome-stable \
+    --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy and run setup script to install Chrome dependencies
-COPY setup.sh /setup.sh
-RUN chmod +x /setup.sh && /setup.sh
+# Install ChromeDriver
+RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') && \
+    wget -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip" && \
+    unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
+    rm /tmp/chromedriver.zip
 
-# Set working directory
+# Set the display port for headless Chrome
+ENV DISPLAY=:99
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the application code including requirements.txt
-COPY . /app
-
-# Upgrade pip
-RUN pip install --upgrade pip
+# Copy the requirements file to the working directory
+COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install -r requirements.txt --root-user-action=ignore
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port 5000
+# Copy the application code to the working directory
+COPY . .
+
+# Expose the port on which the Flask app will run
 EXPOSE 5000
 
-# Start the app with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", "--timeout", "600", "app:app"]
-
-# Install ChromeDriver
-RUN apt-get install -y wget unzip \
-    && wget https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_linux64.zip \
-    && unzip chromedriver_linux64.zip \
-    && mv chromedriver /usr/local/bin/chromedriver \
-    && chmod +x /usr/local/bin/chromedriver
+# Define the command to run the Flask app
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
