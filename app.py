@@ -35,6 +35,8 @@ def get_chrome_driver():
     service = Service(executable_path="/usr/local/bin/chromedriver")
     # Initialize the Chrome WebDriver with the specified options and service
     driver = webdriver.Chrome(service=service, options=chrome_options)
+    # Set the page load timeout
+    driver.set_page_load_timeout(600)  # Increase timeout to 120 seconds
     return driver
 
 # Function to Scrap Product Detail
