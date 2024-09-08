@@ -279,5 +279,5 @@ def scrape_product():
         return f"An error occurred: {e}", 500
 
 if __name__ == '__main__':
-    app.run(port=int(os.environ.get('PORT', 5000)))
+    app.run()
 
