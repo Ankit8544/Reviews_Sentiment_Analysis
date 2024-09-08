@@ -3,7 +3,7 @@ FROM python:3.9-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV PIP_DEFAULT_TIMEOUT=600
+ENV PIP_DEFAULT_TIMEOUT=1200
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
