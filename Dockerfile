@@ -24,10 +24,10 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && rm -rf /var/lib/apt/lists/*
 
 # Install ChromeDriver
-RUN CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
-    wget -N https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip && \
-    unzip chromedriver_linux64.zip -d /usr/local/bin/ && \
-    rm chromedriver_linux64.zip
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/128.0.6613.119/win64/chromedriver-win64.zip -O /chromedriver.zip && \
+    unzip /chromedriver.zip -d /usr/local/bin/ && \
+    rm /chromedriver.zip && \
+    chmod +x /usr/local/bin/chromedriver
 
 # Install Python dependencies
 COPY requirements.txt /app/
