@@ -37,6 +37,20 @@ RUN pip install --upgrade pip && \
 # Install NLTK packages
 RUN python -m nltk.downloader punkt stopwords
 
+# Set up virtual display for headless Chrome
+RUN apt-get update && apt-get install -y \
+    libglib2.0-0 \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libxi6 \
+    libxtst6 \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set the display port to avoid crashes due to no display
 ENV DISPLAY=:99
 
