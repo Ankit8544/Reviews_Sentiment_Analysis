@@ -28,11 +28,13 @@ nltk.download('stopwords')
 
 def get_chrome_driver():
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    driver = webdriver.Chrome(options=chrome_options)
+    chrome_options.add_argument("--headless")  # Run in headless mode (no UI)
+    chrome_options.add_argument("--no-sandbox")  # Bypass the sandbox security feature
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    # Path to the ChromeDriver executable on Windows
+    service = Service(executable_path="D:\\Resume\\Natural_Language_Processing_Project\\Reviews_Sentiment_Analysis\\chromedriver.exe")
+    # Initialize the Chrome WebDriver with the specified options and service
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
 # Function to Scrap Product Detail
