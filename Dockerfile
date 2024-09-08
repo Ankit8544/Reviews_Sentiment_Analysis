@@ -29,6 +29,8 @@ RUN CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && \
     rm chromedriver_linux64.zip
 
+RUN python -m nltk.downloader punkt stopwords
+
 # Set the display port to avoid crashes due to no display
 ENV DISPLAY=:99
 
