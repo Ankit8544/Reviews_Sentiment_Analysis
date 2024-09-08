@@ -29,6 +29,12 @@ RUN CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && \
     rm chromedriver_linux64.zip
 
+# Install Python dependencies
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r /app/requirements.txt -i https://pypi.org/simple
+
+# Install NLTK packages
 RUN python -m nltk.downloader punkt stopwords
 
 # Set the display port to avoid crashes due to no display
@@ -36,11 +42,6 @@ ENV DISPLAY=:99
 
 # Set up working directory
 WORKDIR /app
-
-# Copy the requirements file and install dependencies
-COPY requirements.txt /app/
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt -i https://pypi.org/simple
 
 # Copy the rest of the application code
 COPY . /app/
