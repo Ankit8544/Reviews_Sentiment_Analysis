@@ -32,7 +32,7 @@ def get_chrome_driver():
     chrome_options.add_argument("--no-sandbox")  # Bypass the sandbox security feature
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
     # Path to the ChromeDriver executable on Windows
-    service = Service(executable_path="D:\\Resume\\Natural_Language_Processing_Project\\Reviews_Sentiment_Analysis\\chromedriver.exe")
+    service = Service(executable_path="/usr/local/bin/chromedriver")
     # Initialize the Chrome WebDriver with the specified options and service
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
