@@ -27,6 +27,19 @@ import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
 
+def get_chrome_driver():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run in headless mode (no UI)
+    chrome_options.add_argument("--no-sandbox")  # Bypass the sandbox security feature
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    # Path to the ChromeDriver executable on Windows
+    service = Service("D:/Resume/Natural_Language_Processing_Project/Reviews_Sentiment_Analysis/chromedriver.exe")    
+    # Initialize the Chrome WebDriver with the specified options and service
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    # Set the page load timeout
+    driver.set_page_load_timeout(600)  # Increase timeout to 120 seconds
+    return driver
+
 def wait_until_element_present(driver, by, value, timeout=30):
     for _ in range(3):  # Retry 3 times
         try:
@@ -37,20 +50,6 @@ def wait_until_element_present(driver, by, value, timeout=30):
         except TimeoutException:
             time.sleep(5)  # Wait before retrying
     raise TimeoutException(f"Element not found by {by} with value {value} within {timeout} seconds")
-
-
-def get_chrome_driver():
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Run in headless mode (no UI)
-    chrome_options.add_argument("--no-sandbox")  # Bypass the sandbox security feature
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-    # Path to the ChromeDriver executable on Windows
-    service = Service(executable_path="/usr/local/bin/chromedriver")
-    # Initialize the Chrome WebDriver with the specified options and service
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    # Set the page load timeout
-    driver.set_page_load_timeout(600)  # Increase timeout to 120 seconds
-    return driver
 
 # Function to Scrap Product Detail
 def scrape_product_details(Product_URL):
