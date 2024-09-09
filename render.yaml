@@ -3,23 +3,15 @@ services:
     name: review-sentiment-analysis  # Service name should be unique
     env: python
     plan: free
-    buildCommand: buildCommand: ./setup.sh && pip install -r requirements.txt
+    buildCommand: ./setup.sh && pip install -r requirements.txt
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 1200
     autoDeploy: true
     envVars:
       - key: MYSQL_HOST
-        fromDatabase:
-          name: your-database-name  # Replace with your actual database service name
-          property: host
+        value: ${MYSQL_HOST}
       - key: MYSQL_USER
-        fromDatabase:
-          name: your-database-name  # Replace with your actual database service name
-          property: user
+        value: ${MYSQL_USER}
       - key: MYSQL_PASSWORD
-        fromDatabase:
-          name: your-database-name  # Replace with your actual database service name
-          property: password
+        value: ${MYSQL_PASSWORD}
       - key: MYSQL_DB
-        fromDatabase:
-          name: your-database-name  # Replace with your actual database service name
-          property: database
+        value: ${MYSQL_DB}

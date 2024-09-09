@@ -22,8 +22,9 @@ from nltk.tokenize import word_tokenize
 from nltk.sentiment import SentimentIntensityAnalyzer
 from transformers import pipeline
 import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import nltk
+import logging
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 nltk.download('punkt')
 nltk.download('stopwords')
 
@@ -250,6 +251,7 @@ def analyze_flipkart_reviews(link):
     }
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.DEBUG)
 CORS(app)  # Enable CORS for your app
 
 # Create a route for the index page
@@ -264,27 +266,34 @@ def home_page():
 def scrape_product():
     try:
         if request.method == 'POST':
+            # Check if the request contains form data
+            if 'Product URL' not in request.form:
+                raise ValueError("Product URL not provided in request")
+
             Product_URL = request.form['Product URL']
+            app.logger.info(f"Received request to scrape URL: {Product_URL}")
+            
+            # Scrape and analyze product details
             Detail = scrape_product_details(Product_URL=Product_URL)
             results = analyze_flipkart_reviews(Detail['Link'])
             
             # Product Details 
             Product_Details_List = {
                 "Product URL": Product_URL,
-                "Product Name": Detail['Product Name'],
-                "Product Image": Detail['Product Image'],
-                "Original Price": Detail['Original Price'],
-                "Discount %": Detail['Discount %'],
-                "Special Price": Detail['Special Price'],
-                "Overall Rating": Detail['Rating'],
-                "Total Ratings": Detail['Total Number of Ratings'],
-                "Total Reviews": Detail['Total Number of Reviews'],
-                "Expected Delivery Date": Detail['Delivery Date'],
-                "Seller Name": Detail['Seller Name'],
-                "Seller Rating": Detail['Seller Rating'],
-                "Positive Reviews %": results['Positive Reviews %'],
-                "Negative Reviews %": results['Negative Reviews %'],
-                "Neutral Reviews %": results['Neutral Reviews %']
+                "Product Name": Detail.get('Product Name', 'N/A'),
+                "Product Image": Detail.get('Product Image', 'N/A'),
+                "Original Price": Detail.get('Original Price', 'N/A'),
+                "Discount %": Detail.get('Discount %', 'N/A'),
+                "Special Price": Detail.get('Special Price', 'N/A'),
+                "Overall Rating": Detail.get('Rating', 'N/A'),
+                "Total Ratings": Detail.get('Total Number of Ratings', 'N/A'),
+                "Total Reviews": Detail.get('Total Number of Reviews', 'N/A'),
+                "Expected Delivery Date": Detail.get('Delivery Date', 'N/A'),
+                "Seller Name": Detail.get('Seller Name', 'N/A'),
+                "Seller Rating": Detail.get('Seller Rating', 'N/A'),
+                "Positive Reviews %": results.get('Positive Reviews %', 'N/A'),
+                "Negative Reviews %": results.get('Negative Reviews %', 'N/A'),
+                "Neutral Reviews %": results.get('Neutral Reviews %', 'N/A')
             }
             
             # Save product details to MySQL
@@ -296,6 +305,7 @@ def scrape_product():
         return render_template('index.html')
     
     except Exception as e:
+        app.logger.error(f"An error occurred: {e}")
         return f"An error occurred: {e}", 500
 
 if __name__ == '__main__':
