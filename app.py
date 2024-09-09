@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager  # Ensure this is installed
+from selenium.common.exceptions import TimeoutException
 import time
 import pandas as pd
 import re
@@ -25,6 +26,18 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
+
+def wait_until_element_present(driver, by, value, timeout=30):
+    for _ in range(3):  # Retry 3 times
+        try:
+            element = WebDriverWait(driver, timeout).until(
+                EC.presence_of_element_located((by, value))
+            )
+            return element
+        except TimeoutException:
+            time.sleep(5)  # Wait before retrying
+    raise TimeoutException(f"Element not found by {by} with value {value} within {timeout} seconds")
+
 
 def get_chrome_driver():
     chrome_options = Options()
@@ -50,6 +63,10 @@ def scrape_product_details(Product_URL):
     for _ in range(scrolls):
         driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         time.sleep(2)
+        
+    # Wait for specific elements to load
+    wait_until_element_present(driver, By.CLASS_NAME, "VU-ZEz")
+    
     # Get the page source after scrolling
     Product_Page = driver.page_source
     # Close the browser
