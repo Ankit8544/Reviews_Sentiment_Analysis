@@ -1,3 +1,4 @@
+# Base Image
 FROM python:3.9-slim
 
 # Set environment variables
@@ -6,7 +7,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_DEFAULT_TIMEOUT=1200
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     wget \
     unzip \
     xvfb \
@@ -14,6 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     default-libmysqlclient-dev \
     build-essential \
+    libffi-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Chrome browser
@@ -36,20 +42,6 @@ RUN pip install --upgrade pip && \
 
 # Install NLTK packages
 RUN python -m nltk.downloader punkt stopwords
-
-# Set up virtual display for headless Chrome
-RUN apt-get update && apt-get install -y \
-    libglib2.0-0 \
-    libnss3 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libxi6 \
-    libxtst6 \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    && rm -rf /var/lib/apt/lists/*
 
 # Set the display port to avoid crashes due to no display
 ENV DISPLAY=:99
